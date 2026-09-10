@@ -1,0 +1,134 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Myanmar University Enrollment Intelligence</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">MU</div>
+      <div>
+        <strong>University AI</strong>
+        <span>Enrollment Intelligence</span>
+      </div>
+    </div>
+
+    <nav>
+      <a class="active" href="#overview">Overview</a>
+      <a href="#enrollment">Enrollment</a>
+      <a href="#models">Predictive Models</a>
+      <a href="#drivers">Key Drivers</a>
+      <a href="#patterns">Patterns</a>
+      <a href="#predict">Prediction</a>
+    </nav>
+
+    <div class="sidebar-note">
+      <span class="dot"></span>
+      Model dashboard
+      <small>Powered by the supplied notebook pipeline</small>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Decision dashboard</p>
+        <h1>Myanmar University Enrollment</h1>
+        <p class="subtitle">Critical insights from the enrollment dataset and predictive models.</p>
+      </div>
+      <button id="refreshBtn" class="ghost-btn">↻ Refresh analysis</button>
+    </header>
+
+    <section id="overview" class="kpi-grid">
+      <div class="kpi-card"><span>Total students</span><strong id="students">—</strong><small>Cleaned records</small></div>
+      <div class="kpi-card accent"><span>Enrollment rate</span><strong id="enrollmentRate">—</strong><small>Observed enrolled share</small></div>
+      <div class="kpi-card"><span>Enrolled</span><strong id="enrolled">—</strong><small>Students enrolled</small></div>
+      <div class="kpi-card"><span>Missing cells</span><strong id="missing">—</strong><small>Across the dataset</small></div>
+    </section>
+
+    <section id="enrollment" class="section-grid">
+      <article class="panel">
+        <div class="panel-head"><div><h2>Enrollment status</h2><p>Overall composition of enrollment outcomes.</p></div></div>
+        <div class="chart-wrap"><canvas id="enrollmentChart"></canvas></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><div><h2>Matriculation score distribution</h2><p>Distribution used by the predictive analysis.</p></div></div>
+        <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
+      </article>
+    </section>
+
+    <section id="models" class="section-grid">
+      <article class="panel wide">
+        <div class="panel-head"><div><h2>Classification model comparison</h2><p>Higher weighted F1 is better for enrollment-status prediction.</p></div><span id="bestClassifier" class="badge">Best: —</span></div>
+        <div class="chart-wrap"><canvas id="classificationChart"></canvas></div>
+      </article>
+      <article class="panel wide">
+        <div class="panel-head"><div><h2>Regression model comparison</h2><p>R², MAE and RMSE for matriculation-score prediction.</p></div><span id="bestRegressor" class="badge">Best: —</span></div>
+        <div class="chart-wrap"><canvas id="regressionChart"></canvas></div>
+      </article>
+    </section>
+
+    <section id="drivers" class="section-grid">
+      <article class="panel">
+        <div class="panel-head"><div><h2>Top predictive features</h2><p>Permutation importance from the best classifier.</p></div></div>
+        <div class="chart-wrap tall"><canvas id="importanceChart"></canvas></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><div><h2>Income vs matriculation score</h2><p>Sample of observations to expose relationships.</p></div></div>
+        <div class="chart-wrap tall"><canvas id="scatterChart"></canvas></div>
+      </article>
+    </section>
+
+    <section id="patterns" class="section-grid">
+      <article class="panel">
+        <div class="panel-head"><div><h2>Enrollment by region</h2><p>Compare enrolled and non-enrolled students.</p></div></div>
+        <div class="chart-wrap tall"><canvas id="regionChart"></canvas></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><div><h2>Top chosen fields</h2><p>Most common selected fields of study.</p></div></div>
+        <div class="chart-wrap tall"><canvas id="fieldChart"></canvas></div>
+      </article>
+    </section>
+
+    <section id="predict" class="panel prediction-panel">
+      <div class="panel-head">
+        <div><h2>Matriculation score prediction</h2><p>Enter student attributes and select a supplied regression model.</p></div>
+      </div>
+      <form id="predictionForm" class="form-grid">
+        <label>Model type<select name="model_type" required><option value="linear_regression">Linear Regression</option><option value="random_forest_regressor">Random Forest Regressor</option><option value="gradient_boosting_regressor">Gradient Boosting Regressor</option></select></label>
+        <label>Age<input name="Age" type="number" step="1" required></label>
+        <label>Gender<select name="Gender"><option>Male</option><option>Female</option></select></label>
+        <label>Region<input name="Region" placeholder="Yangon"></label>
+        <label>Urban / Rural<select name="Urban_Rural"><option>Urban</option><option>Rural</option></select></label>
+        <label>School type<input name="School_Type" placeholder="Public"></label>
+        <label>Subject stream<input name="Subject_Stream" placeholder="Science"></label>
+        <label>Score band<select name="Score_Band" required><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option><option value="Very High">Very High</option></select></label>
+        <label>Parent education<select name="Parent_Education_Level"><option>No Formal Education</option><option>Primary School</option><option>Middle School</option><option>High School</option><option>University Graduate</option></select></label>
+        <label>Siblings<input name="Number_of_Siblings" type="number" step="1"></label>
+        <label>Family monthly income (MMK)<input name="Family_Monthly_Income_MMK" type="number" step="1"></label>
+        <label>Internet at home<select name="Internet_Access_At_Home"><option>Yes</option><option>No</option></select></label>
+        <label>English proficiency<select name="English_Proficiency_Level"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select></label>
+        <label>University graduate in family<select name="Family_Member_University_Graduate"><option>Yes</option><option>No</option></select></label>
+        <label>Test prep course<select name="Test_Prep_Course"><option>Yes</option><option>No</option></select></label>
+        <label>Extracurricular score<input name="Extracurricular_Score" type="number" step="0.1"></label>
+        <label>Distance to university (km)<input name="Distance_to_University_km" type="number" step="0.1"></label>
+        <label>Scholarship applied<select name="Scholarship_Applied"><option>Yes</option><option>No</option></select></label>
+        <label>Scholarship received<select name="Scholarship_Received"><option>Yes</option><option>No</option></select></label>
+        <button class="primary-btn" type="submit">Predict score</button>
+      </form>
+      <div id="predictionResult" class="prediction-result hidden"></div>
+    </section>
+
+    <footer>Dashboard UI • Django • Scikit-learn • Chart.js</footer>
+  </main>
+</div>
+<script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>

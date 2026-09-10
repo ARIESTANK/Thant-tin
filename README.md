@@ -1,31 +1,31 @@
-# Cybersecurity Analytics Dashboard
-
-Django dashboard for displaying the critical results from the supplied cybersecurity analysis notebook.
-
-## Structure
-
-- `cyberdashboard/urls.py` — project URL routing
-- `dashboard/apps.py` — Django app configuration
-- `dashboard/urls.py` — dashboard/API routes
-- `dashboard/views.py` — CSV statistics + notebook model results
-- `dashboard/templates/dashboard/index.html` — dashboard UI
-- `dashboard/static/dashboard/css/style.css` — styling
-- `dashboard/static/dashboard/js/dashboard.js` — Chart.js rendering
-- `data/cybersecurity_attacks.csv` — supplied dataset
+# Myanmar University Enrollment Django Dashboard
 
 ## Run
 
 ```bash
-python -m venv venv
-venv\Scripts\activate
+python -m venv .venv
+# Windows:
+.venv\Scripts\activate
+# macOS/Linux:
+source .venv/bin/activate
+
 pip install -r requirements.txt
-django-admin startproject temp .  # do not run this if you already have the included project files
-python manage.py migrate
 python manage.py runserver
 ```
 
-The included files are the requested Django app/project pieces. If starting from an existing Django project,
-copy `dashboard/` and merge the URL patterns into your existing project `urls.py`.
+Open http://127.0.0.1:8000/
 
-Note: the supplied request asked for `app.py`; Django convention is `apps.py`, so the file is named `dashboard/apps.py`.
-"# Arkar-zin-moe" 
+The CSV is already placed in `data/`.
+
+## Important
+
+The dashboard trains the models on the first API request and caches the result in memory.
+Use the refresh button to reload the dashboard; restart Django after changing the dataset.
+
+Files requested:
+- `university_dashboard/urls.py`
+- `dashboard_app/app.py`
+- `dashboard_app/views.py`
+- `dashboard_app/templates/dashboard.html`
+- `dashboard_app/static/css/dashboard.css`
+- `dashboard_app/static/js/dashboard.js`
